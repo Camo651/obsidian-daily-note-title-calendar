@@ -30,13 +30,13 @@ On any note whose file name matches your Daily Notes date format, the plugin hid
 
 ### Manual
 
-1. Download `main.js`, `manifest.json`, and `styles.css` from the latest [release](https://github.com/Camo651/obsidian-daily-note-calendar/releases).
+1. Download `main.js`, `manifest.json`, and `styles.css` from the latest [release](https://github.com/Camo651/obsidian-daily-note-title-calendar/releases).
 2. Copy them into your vault at `.obsidian/plugins/daily-note-title-calendar/`.
 3. Reload Obsidian and enable the plugin under Settings → Community plugins.
 
 ### Beta testing with BRAT
 
-Using the [BRAT](https://github.com/TfTHacker/obsidian42-brat) plugin, add the beta plugin `Camo651/obsidian-daily-note-calendar`.
+Using the [BRAT](https://github.com/TfTHacker/obsidian42-brat) plugin, add the beta plugin `Camo651/obsidian-daily-note-title-calendar`.
 
 ## Usage
 
