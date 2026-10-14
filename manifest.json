@@ -1,0 +1,10 @@
+{
+  "id": "daily-note-calendar",
+  "name": "Daily Note Calendar",
+  "version": "1.0.0",
+  "minAppVersion": "1.5.0",
+  "description": "Replaces a daily note's title with a rendered date and a calendar to jump to (and create) any day's note using your configured daily note template.",
+  "author": "Camo651",
+  "authorUrl": "https://github.com/Camo651",
+  "isDesktopOnly": false
+}

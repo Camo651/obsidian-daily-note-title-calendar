@@ -1,0 +1,133 @@
+/* Hide Obsidian's native inline title in daily notes we hijack */
+.dnc-hide-native-title > .inline-title {
+  display: none !important;
+}
+
+.dnc-title-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.2em;
+  width: 100%;
+  max-width: 100%;
+  margin: var(--inline-title-margin-top, 0.5em) 0
+    var(--inline-title-margin-bottom, 0.2em) 0;
+}
+
+.dnc-date {
+  /* Fixed basis keeps the arrows in a constant position regardless of the
+     rendered date's length; it shrinks (with an ellipsis) only when the pane
+     is too narrow to fit, so the arrows never overflow the screen. */
+  flex: 0 1 17em;
+  min-width: 0;
+  box-sizing: border-box;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: var(--inline-title-size, 1.8em);
+  font-weight: var(--inline-title-weight, 700);
+  line-height: 1.2;
+  color: var(--inline-title-color, var(--text-normal));
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 0 0.15em;
+}
+.dnc-date:hover {
+  background: var(--background-modifier-hover);
+}
+
+.dnc-arrow {
+  all: unset;
+  flex: 0 0 auto;
+  cursor: pointer;
+  font-size: 1.4em;
+  line-height: 1;
+  padding: 0 0.2em;
+  border-radius: 6px;
+  color: var(--text-muted);
+}
+.dnc-arrow:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+.dnc-popover {
+  z-index: var(--layer-menu, 1000);
+  background: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-s);
+  padding: 10px;
+  width: 260px;
+  max-width: calc(100vw - 16px);
+  user-select: none;
+}
+.dnc-pop-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.dnc-pop-title {
+  font-weight: 600;
+  cursor: pointer;
+}
+.dnc-pop-nav {
+  all: unset;
+  cursor: pointer;
+  padding: 2px 8px;
+  border-radius: 6px;
+  color: var(--text-muted);
+}
+.dnc-pop-nav:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+.dnc-pop-weekdays,
+.dnc-pop-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+.dnc-pop-weekday {
+  text-align: center;
+  font-size: 0.75em;
+  color: var(--text-muted);
+  padding: 2px 0;
+}
+.dnc-pop-day {
+  position: relative;
+  text-align: center;
+  padding: 6px 0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+.dnc-pop-day:hover {
+  background: var(--background-modifier-hover);
+}
+.dnc-pop-day.is-outside {
+  color: var(--text-faint);
+}
+.dnc-pop-day.is-today {
+  font-weight: 700;
+  color: var(--text-accent);
+}
+.dnc-pop-day.is-selected {
+  background: var(--interactive-accent);
+  color: var(--text-on-accent);
+}
+.dnc-pop-day.has-note::after {
+  content: "";
+  position: absolute;
+  bottom: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--text-accent);
+}
+.dnc-pop-day.is-selected.has-note::after {
+  background: var(--text-on-accent);
+}
