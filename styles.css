@@ -6,18 +6,54 @@
 .dnc-title-bar {
   display: flex;
   align-items: center;
-  gap: 0.2em;
   width: 100%;
   max-width: 100%;
   margin: var(--inline-title-margin-top, 0.5em) 0
     var(--inline-title-margin-bottom, 0.2em) 0;
 }
 
+.dnc-title-main {
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 auto;
+  min-width: 0;
+  position: relative;
+}
+
+.dnc-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.2em;
+  max-width: 100%;
+}
+
+.dnc-today-chip {
+  /* Positioned out of flow so it overlays above the title block without
+     shifting the title (and the page content) down by its height. */
+  position: absolute;
+  bottom: calc(100% + 0.05em);
+  left: 50%;
+  transform: translateX(-50%);
+  width: fit-content;
+  padding: 0.02em 0.45em;
+  border-radius: 999px;
+  font-size: 0.55em;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  line-height: 1.4;
+  white-space: nowrap;
+  color: var(--text-muted);
+  background: var(--interactive-accent);
+}
+
 .dnc-date {
-  /* Fixed basis keeps the arrows in a constant position regardless of the
-     rendered date's length; it shrinks (with an ellipsis) only when the pane
-     is too narrow to fit, so the arrows never overflow the screen. */
-  flex: 0 1 17em;
+  /* Explicit fixed width keeps the arrows in a constant position regardless of
+     the rendered date's length; it shrinks (with an ellipsis) only when the
+     pane is too narrow to fit, so the arrows never overflow the screen. */
+  flex: 0 1 auto;
+  width: 17em;
+  max-width: 100%;
   min-width: 0;
   box-sizing: border-box;
   text-align: center;
@@ -39,16 +75,43 @@
 .dnc-arrow {
   all: unset;
   flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  font-size: 1.4em;
-  line-height: 1;
-  padding: 0 0.2em;
+  padding: 0.1em;
   border-radius: 6px;
   color: var(--text-muted);
 }
 .dnc-arrow:hover {
   background: var(--background-modifier-hover);
   color: var(--text-normal);
+}
+.dnc-arrow .svg-icon {
+  width: 1.3em;
+  height: 1.3em;
+}
+
+.dnc-today-btn {
+  all: unset;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.1em;
+  margin-left: 0.15em;
+  padding: 0.15em;
+  border-radius: 6px;
+  color: var(--text-muted);
+}
+.dnc-today-btn:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+.dnc-today-btn .svg-icon {
+  width: 1.2em;
+  height: 1.2em;
 }
 
 .dnc-popover {
@@ -68,9 +131,32 @@
   justify-content: space-between;
   margin-bottom: 8px;
 }
+.dnc-pop-center {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+}
 .dnc-pop-title {
   font-weight: 600;
   cursor: pointer;
+}
+.dnc-pop-today {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 6px;
+  color: var(--text-muted);
+}
+.dnc-pop-today:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+.dnc-pop-today .svg-icon {
+  width: 1em;
+  height: 1em;
 }
 .dnc-pop-nav {
   all: unset;

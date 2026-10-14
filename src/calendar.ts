@@ -1,4 +1,4 @@
-import { App, WorkspaceLeaf, moment } from "obsidian";
+import { App, WorkspaceLeaf, moment, setIcon } from "obsidian";
 import type { Moment } from "moment";
 import { getDailyNote } from "obsidian-daily-notes-interface";
 import { allDailyNotesSafe, openOrCreate } from "./dailyNotes";
@@ -89,10 +89,16 @@ export class CalendarPopover {
 
     const header = root.createDiv({ cls: "dnc-pop-header" });
     const prev = header.createEl("button", { cls: "dnc-pop-nav", text: "\u2039" });
-    const title = header.createDiv({
+    const center = header.createDiv({ cls: "dnc-pop-center" });
+    const title = center.createDiv({
       cls: "dnc-pop-title",
       text: this.viewMonth.format("MMMM YYYY"),
     });
+    const todayBtn = center.createEl("button", {
+      cls: "dnc-pop-today",
+      attr: { "aria-label": "Jump to today" },
+    });
+    setIcon(todayBtn, "calendar");
     const next = header.createEl("button", { cls: "dnc-pop-nav", text: "\u203A" });
     prev.onclick = () => {
       this.viewMonth.subtract(1, "month");
@@ -102,10 +108,12 @@ export class CalendarPopover {
       this.viewMonth.add(1, "month");
       this.render();
     };
-    title.onclick = () => {
+    const goToday = () => {
       this.viewMonth = moment().startOf("month");
       this.render();
     };
+    title.onclick = goToday;
+    todayBtn.onclick = goToday;
 
     const firstWd = this.firstWeekday();
     const minNames = moment.weekdaysMin(); // index 0 = Sunday

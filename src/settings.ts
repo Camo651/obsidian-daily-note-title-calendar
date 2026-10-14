@@ -10,12 +10,18 @@ export interface DailyNoteCalendarSettings {
   weekStart: WeekStart;
   /** Show the previous/next-day arrows around the title. */
   showArrows: boolean;
+  /** Render the date with displayFormat; when off, show the raw file name. */
+  showRichTitle: boolean;
+  /** Show the "Today" chip above the title on today's note. */
+  showTodayChip: boolean;
 }
 
 export const DEFAULT_SETTINGS: DailyNoteCalendarSettings = {
   displayFormat: "dddd, MMMM D, YYYY",
   weekStart: "locale",
   showArrows: true,
+  showRichTitle: true,
+  showTodayChip: true,
 };
 
 export class DailyNoteCalendarSettingTab extends PluginSettingTab {
@@ -31,6 +37,40 @@ export class DailyNoteCalendarSettingTab extends PluginSettingTab {
     containerEl.empty();
 
     new Setting(containerEl)
+      .setName("Show navigation arrows")
+      .setDesc("Show the previous/next day arrows around the title.")
+      .addToggle((t) =>
+        t.setValue(this.plugin.settings.showArrows).onChange(async (value) => {
+          this.plugin.settings.showArrows = value;
+          await this.plugin.saveSettings();
+          this.plugin.decorator.refreshAll();
+        })
+      );
+
+    new Setting(containerEl)
+      .setName("Show rich date title")
+      .setDesc("Replace the note title with a formatted date. When off, the raw file name is shown instead.")
+      .addToggle((t) =>
+        t.setValue(this.plugin.settings.showRichTitle).onChange(async (value) => {
+          this.plugin.settings.showRichTitle = value;
+          await this.plugin.saveSettings();
+          this.plugin.decorator.refreshAll();
+          this.display();
+        })
+      );
+
+    new Setting(containerEl)
+      .setName("Show Today chip")
+      .setDesc('Show a "Today" chip above the title when viewing today\'s note.')
+      .addToggle((t) =>
+        t.setValue(this.plugin.settings.showTodayChip).onChange(async (value) => {
+          this.plugin.settings.showTodayChip = value;
+          await this.plugin.saveSettings();
+          this.plugin.decorator.refreshAll();
+        })
+      );
+
+    new Setting(containerEl)
       .setName("Title date format")
       .setDesc("Moment.js format used to render the date in place of the note title.")
       .addMomentFormat((c) =>
@@ -43,7 +83,8 @@ export class DailyNoteCalendarSettingTab extends PluginSettingTab {
             await this.plugin.saveSettings();
             this.plugin.decorator.refreshAll();
           })
-      );
+      )
+      .setDisabled(!this.plugin.settings.showRichTitle);
 
     new Setting(containerEl)
       .setName("Week starts on")
@@ -59,17 +100,6 @@ export class DailyNoteCalendarSettingTab extends PluginSettingTab {
             this.plugin.settings.weekStart = value as WeekStart;
             await this.plugin.saveSettings();
           })
-      );
-
-    new Setting(containerEl)
-      .setName("Show navigation arrows")
-      .setDesc("Show the previous/next day arrows around the title.")
-      .addToggle((t) =>
-        t.setValue(this.plugin.settings.showArrows).onChange(async (value) => {
-          this.plugin.settings.showArrows = value;
-          await this.plugin.saveSettings();
-          this.plugin.decorator.refreshAll();
-        })
       );
   }
 }
