@@ -1,4 +1,4 @@
-# Daily Note Calendar
+# Daily Note Title Calendar
 
 An [Obsidian](https://obsidian.md) plugin that turns a daily note's title into a rich, interactive date.
 
@@ -25,13 +25,13 @@ On any note whose file name matches your Daily Notes date format, the plugin hid
 ### From the Community Plugins browser
 
 1. Open Settings → Community plugins → Browse.
-2. Search for "Daily Note Calendar".
+2. Search for "Daily Note Title Calendar".
 3. Install and enable it.
 
 ### Manual
 
 1. Download `main.js`, `manifest.json`, and `styles.css` from the latest [release](https://github.com/Camo651/obsidian-daily-note-calendar/releases).
-2. Copy them into your vault at `.obsidian/plugins/daily-note-calendar/`.
+2. Copy them into your vault at `.obsidian/plugins/daily-note-title-calendar/`.
 3. Reload Obsidian and enable the plugin under Settings → Community plugins.
 
 ### Beta testing with BRAT
@@ -64,7 +64,7 @@ npm run dev    # watch build into ./dist
 npm run build  # type-check and produce a production build in ./dist
 ```
 
-The build outputs `main.js`, `manifest.json`, and `styles.css` into `./dist`, which is a ready-to-install plugin folder. Copy its contents into `.obsidian/plugins/daily-note-calendar/` in a test vault, or symlink it there.
+The build outputs `main.js`, `manifest.json`, and `styles.css` into `./dist`, which is a ready-to-install plugin folder. Copy its contents into `.obsidian/plugins/daily-note-title-calendar/` in a test vault, or symlink it there.
 
 ## License
 
