@@ -4,30 +4,40 @@ import { dateForFile, openOrCreate } from "./dailyNotes";
 import { CalendarPopover } from "./calendar";
 import type DailyNoteCalendarPlugin from "./main";
 
+/** Class name of the injected container that replaces the native title. */
 const BAR_CLASS = "dnc-title-bar";
+/** Class name placed on the title's parent to hide the native inline title. */
 const HIDE_CLASS = "dnc-hide-native-title";
 
+/** Replaces the inline title of daily notes with a date display and navigation controls. */
 export class TitleDecorator {
+  /** The owning plugin instance. */
   private plugin: DailyNoteCalendarPlugin;
+  /** The currently open calendar popover, if any. */
   private popover: CalendarPopover | null = null;
+  /** Observers, one per decorated leaf, that re-decorate when the title is rebuilt. */
   private observers = new Map<WorkspaceLeaf, MutationObserver>();
 
+  /** Creates a decorator bound to a plugin instance. */
   constructor(plugin: DailyNoteCalendarPlugin) {
     this.plugin = plugin;
   }
 
+  /** Re-evaluates and updates the decoration on every open markdown leaf. */
   refreshAll = (): void => {
     this.plugin.app.workspace
       .getLeavesOfType("markdown")
       .forEach((leaf) => this.decorateLeaf(leaf));
   };
 
+  /** Returns the inline-title element for a markdown view, or null if it is not present. */
   private getInlineTitleEl(view: MarkdownView): HTMLElement | null {
     const direct = (view as unknown as { inlineTitleEl?: HTMLElement }).inlineTitleEl;
     if (direct && direct.isConnected) return direct;
     return view.contentEl.querySelector<HTMLElement>(".inline-title");
   }
 
+  /** Adds, updates, or removes the title decoration for a single leaf based on its file. */
   private decorateLeaf(leaf: WorkspaceLeaf): void {
     const view = leaf.view;
     if (!(view instanceof MarkdownView)) return;
@@ -54,6 +64,7 @@ export class TitleDecorator {
     this.renderBar(bar, leaf, date, view.file?.basename ?? "");
   }
 
+  /** Renders the date label, optional chip, navigation arrows, and jump button into the bar. */
   private renderBar(
     bar: HTMLElement,
     leaf: WorkspaceLeaf,
@@ -66,9 +77,6 @@ export class TitleDecorator {
 
     const isToday = date.isSame(moment(), "day");
 
-    // Column holding the (centered) chip and the arrows+title row. Keeping the
-    // chip inside this shrink-to-content column centers it over the
-    // prev/date/next block rather than the full editor width.
     const main = bar.createDiv({ cls: "dnc-title-main" });
 
     if (isToday && this.plugin.settings.showTodayChip) {
@@ -124,6 +132,7 @@ export class TitleDecorator {
     }
   }
 
+  /** Opens a calendar popover anchored to an element for selecting a day. */
   private openCalendar(leaf: WorkspaceLeaf, anchor: HTMLElement, date: Moment): void {
     this.popover?.close();
     this.popover = new CalendarPopover(
@@ -136,6 +145,7 @@ export class TitleDecorator {
     this.popover.open();
   }
 
+  /** Watches a leaf's title parent and re-decorates when Obsidian rebuilds the title. */
   private observe(leaf: WorkspaceLeaf, parent: HTMLElement): void {
     this.observers.get(leaf)?.disconnect();
     const obs = new MutationObserver(() => {
@@ -145,6 +155,7 @@ export class TitleDecorator {
     this.observers.set(leaf, obs);
   }
 
+  /** Removes the decoration and observer for a leaf and restores the native title. */
   private undecorate(leaf: WorkspaceLeaf, parent: HTMLElement): void {
     this.observers.get(leaf)?.disconnect();
     this.observers.delete(leaf);
@@ -152,6 +163,7 @@ export class TitleDecorator {
     parent.querySelectorAll(`:scope > .${BAR_CLASS}`).forEach((el) => el.remove());
   }
 
+  /** Closes any popover and strips all decoration from every markdown leaf. */
   destroy(): void {
     this.popover?.close();
     this.popover = null;

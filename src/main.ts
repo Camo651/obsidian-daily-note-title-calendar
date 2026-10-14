@@ -7,10 +7,14 @@ import {
 import { TitleDecorator } from "./titleDecorator";
 import { dailyNotesReady } from "./dailyNotes";
 
+/** Plugin entry point that decorates daily-note titles and wires up refresh events. */
 export default class DailyNoteCalendarPlugin extends Plugin {
+  /** The loaded, persisted settings. */
   settings!: DailyNoteCalendarSettings;
+  /** The controller that renders and maintains the title decoration. */
   decorator!: TitleDecorator;
 
+  /** Loads settings, registers the decorator and events, and performs the initial decoration. */
   async onload(): Promise<void> {
     await this.loadSettings();
     this.decorator = new TitleDecorator(this);
@@ -36,14 +40,17 @@ export default class DailyNoteCalendarPlugin extends Plugin {
     );
   }
 
+  /** Removes all title decoration when the plugin is disabled. */
   onunload(): void {
     this.decorator?.destroy();
   }
 
+  /** Loads persisted settings, filling in defaults for missing values. */
   async loadSettings(): Promise<void> {
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
   }
 
+  /** Persists the current settings to disk. */
   async saveSettings(): Promise<void> {
     await this.saveData(this.settings);
   }

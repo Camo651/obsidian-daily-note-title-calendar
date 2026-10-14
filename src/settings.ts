@@ -1,8 +1,10 @@
 import { App, PluginSettingTab, Setting } from "obsidian";
 import type DailyNoteCalendarPlugin from "./main";
 
+/** Identifier for which weekday the calendar grid starts on. */
 export type WeekStart = "locale" | "sunday" | "monday" | "saturday";
 
+/** Persisted configuration for the plugin. */
 export interface DailyNoteCalendarSettings {
   /** Moment format for the hijacked title, e.g. "dddd, MMMM D, YYYY". */
   displayFormat: string;
@@ -16,6 +18,7 @@ export interface DailyNoteCalendarSettings {
   showTodayChip: boolean;
 }
 
+/** Fallback settings applied when a value is unset. */
 export const DEFAULT_SETTINGS: DailyNoteCalendarSettings = {
   displayFormat: "dddd, MMMM D, YYYY",
   weekStart: "locale",
@@ -24,14 +27,18 @@ export const DEFAULT_SETTINGS: DailyNoteCalendarSettings = {
   showTodayChip: true,
 };
 
+/** Settings tab that renders the plugin's configuration controls. */
 export class DailyNoteCalendarSettingTab extends PluginSettingTab {
+  /** The plugin instance whose settings this tab edits. */
   plugin: DailyNoteCalendarPlugin;
 
+  /** Creates the settings tab bound to a plugin instance. */
   constructor(app: App, plugin: DailyNoteCalendarPlugin) {
     super(app, plugin);
     this.plugin = plugin;
   }
 
+  /** Builds the settings controls into the tab's container. */
   display(): void {
     const { containerEl } = this;
     containerEl.empty();

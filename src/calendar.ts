@@ -4,16 +4,26 @@ import { getDailyNote } from "obsidian-daily-notes-interface";
 import { allDailyNotesSafe, openOrCreate } from "./dailyNotes";
 import type { DailyNoteCalendarSettings } from "./settings";
 
+/** A floating month-grid calendar for selecting and opening a daily note. */
 export class CalendarPopover {
+  /** The Obsidian app instance. */
   private app: App;
+  /** The plugin settings controlling week start and related behavior. */
   private settings: DailyNoteCalendarSettings;
+  /** The leaf in which a selected day's note is opened. */
   private leaf: WorkspaceLeaf;
+  /** The element the popover is positioned beneath. */
   private anchor: HTMLElement;
-  private selected: Moment; // day of the currently open note
-  private viewMonth: Moment; // month currently displayed
+  /** The day of the currently open note, highlighted as selected. */
+  private selected: Moment;
+  /** The month currently displayed in the grid. */
+  private viewMonth: Moment;
+  /** The popover's root element while open, otherwise null. */
   private rootEl: HTMLElement | null = null;
+  /** Teardown callbacks run when the popover closes. */
   private cleanups: Array<() => void> = [];
 
+  /** Creates a popover anchored to an element and focused on a selected day. */
   constructor(
     app: App,
     settings: DailyNoteCalendarSettings,
@@ -29,6 +39,7 @@ export class CalendarPopover {
     this.viewMonth = selected.clone().startOf("month");
   }
 
+  /** Renders the popover, positions it, and attaches listeners that dismiss or reposition it. */
   open(): void {
     this.close();
     this.rootEl = document.body.createDiv({ cls: "dnc-popover" });
@@ -46,7 +57,6 @@ export class CalendarPopover {
     };
     const reposition = () => this.position();
 
-    // Defer the outside-click listener so the opening click doesn't instantly close it.
     const timer = window.setTimeout(
       () => document.addEventListener("pointerdown", onPointerDown, true),
       0
@@ -62,6 +72,7 @@ export class CalendarPopover {
     this.cleanups.push(() => window.removeEventListener("scroll", reposition, true));
   }
 
+  /** Detaches all listeners and removes the popover from the DOM. */
   close(): void {
     this.cleanups.forEach((fn) => fn());
     this.cleanups = [];
@@ -69,6 +80,7 @@ export class CalendarPopover {
     this.rootEl = null;
   }
 
+  /** Returns the zero-based weekday (0 = Sunday) the grid should start on. */
   private firstWeekday(): number {
     switch (this.settings.weekStart) {
       case "sunday":
@@ -82,6 +94,7 @@ export class CalendarPopover {
     }
   }
 
+  /** Draws the header, weekday labels, and day grid for the current view month. */
   private render(): void {
     const root = this.rootEl;
     if (!root) return;
@@ -116,7 +129,7 @@ export class CalendarPopover {
     todayBtn.onclick = goToday;
 
     const firstWd = this.firstWeekday();
-    const minNames = moment.weekdaysMin(); // index 0 = Sunday
+    const minNames = moment.weekdaysMin();
     const wdRow = root.createDiv({ cls: "dnc-pop-weekdays" });
     for (let i = 0; i < 7; i++) {
       wdRow.createDiv({ cls: "dnc-pop-weekday", text: minNames[(firstWd + i) % 7] ?? "" });
@@ -145,6 +158,7 @@ export class CalendarPopover {
     }
   }
 
+  /** Places the popover just below the anchor, clamped within the viewport width. */
   private position(): void {
     const root = this.rootEl;
     if (!root) return;
